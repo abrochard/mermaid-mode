@@ -1,12 +1,55 @@
-;;; package --- Summary
+;;; mermaid-mode.el --- major mode for working with mermaid graphs -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2019, Adrien Brochard
+
+;; This file is NOT part of Emacs.
+
+;; This  program is  free  software; you  can  redistribute it  and/or
+;; modify it  under the  terms of  the GNU  General Public  License as
+;; published by the Free Software  Foundation; either version 2 of the
+;; License, or (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT  ANY  WARRANTY;  without   even  the  implied  warranty  of
+;; MERCHANTABILITY or FITNESS  FOR A PARTICULAR PURPOSE.   See the GNU
+;; General Public License for more details.
+
+;; You should have  received a copy of the GNU  General Public License
+;; along  with  this program;  if  not,  write  to the  Free  Software
+;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+;; USA
+
+;; Version: 1.0
+;; Author: Adrien Brochard
+;; Keywords: mermaid graphs tools processes
+;; URL: https://github.com/abrochard/mermaid-mode
+;; License: GNU General Public License >= 3
+;; Package-Requires: ((f "0.20.0") (emacs "25.3"))
 
 ;;; Commentary:
+
+;; Major mode for working with mermaid graphs.
+;; See https://mermaidjs.github.io/
+
+;;; Usage:
+
+;; Currently supporting flow charts and sequence diagrams with syntax coloring and indentation.
+
+;; C-c C-c to compile to an image
+;; C-c C-o to open in the live editor
+;; C-c C-h to open the official doc
+
+;;; Customization:
+
+;; By default `mmdc` will compile to png format.
+;; You can change that by setting the variable `mermaid-output-format`.
 
 ;;; Code:
 
 (require 'f)
 
-(defvar mermaid-output-format ".png")
+(defvar mermaid-output-format ".png"
+  "Mmdc output format.")
 
 (setq mermaid-highlights
       '(("graph \\|subgraph \\|end\\|sequenceDiagram\\|loop \\|alt \\|else " . font-lock-keyword-face)
@@ -67,9 +110,11 @@ STR is the declaration."
     (define-key map (kbd "C-c C-h") 'mermaid-open-doc)
     map))
 
+;;;###autoload
 (define-derived-mode mermaid-mode fundamental-mode "mermaid"
   (setq font-lock-defaults '(mermaid-highlights))
   (setq indent-line-function 'mermaid-indent-line)
   (use-local-map mermaid-mode-map))
 
-;;; mermaid.el ends here
+(provide 'mermaid-mode)
+;;; mermaid-mode.el ends here
