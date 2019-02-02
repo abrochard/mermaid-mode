@@ -16,6 +16,8 @@ C-c C-d to open the official doc
 ```
 
 ## Customization
+You can specify the location of `mmdc` with the variable `mermaid-mmdc-location`, the default assumes you have the binary in your exec PATH.
+
 By default `mmdc` will compile to png format. You can change that by setting the variable `mermaid-output-format`.
 
 ## Bugs & Issues

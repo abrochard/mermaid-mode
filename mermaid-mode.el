@@ -41,12 +41,18 @@
 
 ;;; Customization:
 
+;; You can specify the location of mmdc with the variable `mermaid-mmdc-location`,
+;; the default assumes you have the binary in your exec PATH.
+
 ;; By default `mmdc` will compile to png format.
 ;; You can change that by setting the variable `mermaid-output-format`.
 
 ;;; Code:
 
 (require 'f)
+
+(defvar mermaid-mmdc-location "mmdc"
+  "Mmdc location.")
 
 (defvar mermaid-output-format ".png"
   "Mmdc output format.")
@@ -90,7 +96,7 @@ STR is the declaration."
   (interactive)
   (let* ((input (f-filename (buffer-file-name)))
          (output (concat (file-name-sans-extension input) mermaid-output-format)))
-    (call-process "mmdc" nil "*mmdc*" nil "-i" input "-o" output)))
+    (call-process mermaid-mmdc-location nil "*mmdc*" nil "-i" input "-o" output)))
 
 (defun mermaid-open-browser ()
   "Open the current mermaid graph in the live editor."
