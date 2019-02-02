@@ -51,13 +51,20 @@
 
 (require 'f)
 
-(defvar mermaid-mmdc-location "mmdc"
-  "Mmdc location.")
+(defgroup mermaid-mode nil
+  "Major mode for working with mermaid graphs."
+  :group 'extensions
+  :link '(url-link :tag "Repository" "https://github.com/abrochard/emacs-habitica"))
 
-(defvar mermaid-output-format ".png"
-  "Mmdc output format.")
+(defcustom mermaid-mmdc-location "mmdc"
+  "Mmdc location."
+  :group 'mermaid-mode)
 
-(setq mermaid-highlights
+(defcustom mermaid-output-format ".png"
+  "Mmdc output format."
+  :group 'mermaid-mode)
+
+(defconst mermaid-font-lock-keywords
       '(("graph \\|subgraph \\|end\\|sequenceDiagram\\|loop \\|alt \\|else " . font-lock-keyword-face)
         ("---\\|-?->*" . font-lock-function-name-face)
         ("LR\\|TD\\|participant \\|Note" . font-lock-constant-face)))
@@ -102,12 +109,12 @@ STR is the declaration."
   "Open the current mermaid graph in the live editor."
   (interactive)
   (let ((data (replace-regexp-in-string "\n" "" (base64-encode-string (buffer-string)))))
-    (shell-command (concat "open https://mermaidjs.github.io/mermaid-live-editor/#/edit/" data))))
+    (browse-url-default-browser (concat "https://mermaidjs.github.io/mermaid-live-editor/#/edit/" data))))
 
 (defun mermaid-open-doc ()
   "Open the mermaid home page and doc."
   (interactive)
-  (shell-command "open https://mermaidjs.github.io/"))
+  (browse-url-default-browser "https://mermaidjs.github.io/"))
 
 (defvar mermaid-mode-map
   (let ((map (make-sparse-keymap)))
@@ -118,9 +125,8 @@ STR is the declaration."
 
 ;;;###autoload
 (define-derived-mode mermaid-mode fundamental-mode "mermaid"
-  (setq font-lock-defaults '(mermaid-highlights))
-  (setq indent-line-function 'mermaid-indent-line)
-  (use-local-map mermaid-mode-map))
+  (setq font-lock-defaults '(mermaid-font-lock-keywords))
+  (setq indent-line-function 'mermaid-indent-line))
 
 (provide 'mermaid-mode)
 ;;; mermaid-mode.el ends here
