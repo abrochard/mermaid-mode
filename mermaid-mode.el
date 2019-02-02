@@ -37,7 +37,7 @@
 
 ;; C-c C-c to compile to an image
 ;; C-c C-o to open in the live editor
-;; C-c C-h to open the official doc
+;; C-c C-d to open the official doc
 
 ;;; Customization:
 
@@ -107,7 +107,7 @@ STR is the declaration."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-c") 'mermaid-compile)
     (define-key map (kbd "C-c C-o") 'mermaid-open-browser)
-    (define-key map (kbd "C-c C-h") 'mermaid-open-doc)
+    (define-key map (kbd "C-c C-d") 'mermaid-open-doc)
     map))
 
 ;;;###autoload
