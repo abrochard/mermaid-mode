@@ -21,4 +21,4 @@ You can specify the location of `mmdc` with the variable `mermaid-mmdc-location`
 By default `mmdc` will compile to png format. You can change that by setting the variable `mermaid-output-format`.
 
 ## Bugs & Issues
-- fix indentation for `else` statement
+Feel free to open an issue!
