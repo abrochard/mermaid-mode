@@ -65,7 +65,7 @@
   :group 'mermaid-mode)
 
 (defconst mermaid-font-lock-keywords
-      '(("graph \\|subgraph \\|end\\|sequenceDiagram\\|loop \\|alt \\|else " . font-lock-keyword-face)
+      '(("graph \\|subgraph \\|end\\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
         ("---\\|-?->*" . font-lock-function-name-face)
         ("LR\\|TD\\|participant \\|Note" . font-lock-constant-face)))
 
@@ -85,13 +85,15 @@ STR is the declaration."
   (save-excursion
     (end-of-line)
     (let ((graph (mermaid--locate-declaration "^graph\\|sequenceDiagram"))
-          (subgraph (mermaid--locate-declaration "subgraph \\|loop \\|alt"))
-          (both (mermaid--locate-declaration "^graph \\|subgraph \\|loop \\|alt"))
+          (subgraph (mermaid--locate-declaration "subgraph \\|loop \\|alt \\|opt"))
+          (both (mermaid--locate-declaration "^graph \\|^sequenceDiagram$\\|subgraph \\|loop \\|alt \\|opt"))
+          (else (mermaid--locate-declaration "else "))
           (end (mermaid--locate-declaration "^ *end *$")))
       (indent-line-to
        (cond ((equal (car graph) 0) 0) ;; this is a graph declaration
              ((equal (car end) 0) (cdr subgraph)) ;; this is "end", indent to nearest subgraph
              ((equal (car subgraph) 0) (+ 4 (cdr graph))) ;; this is a subgraph
+             ((equal (car else) 0) (cdr subgraph)) ;; this is "else:, indent to nearest alt
              ;; everything else
              ((< (car end) 0) (+ 4 (cdr both))) ;; no end in sight
              ((< (car both) (car end)) (+ 4 (cdr both))) ;; (sub)graph declaration closer, +4
