@@ -66,7 +66,7 @@
 
 (defconst mermaid-font-lock-keywords
       '(("graph \\|subgraph \\|end\\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
-        ("---\\|-?->*" . font-lock-function-name-face)
+        ("---\\|-?->*\\+?" . font-lock-function-name-face)
         ("LR\\|TD\\|participant \\|Note" . font-lock-constant-face)))
 
 (defun mermaid--locate-declaration (str)
