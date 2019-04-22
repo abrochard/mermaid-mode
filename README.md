@@ -4,7 +4,8 @@ Emacs major mode for working with [mermaid graphs](https://mermaidjs.github.io/)
 ![alt text](screenshot.jpg "Screenshot")
 
 ## Installation
-Load the `mermaid-mode.el` file, and install `mmdc` binary from the [mermaid.cli project](https://github.com/mermaidjs/mermaid.cli) if you plan to compile graphs in Emacs.
+1. Install from Melpa or load the `mermaid-mode.el` file
+2. Install `mmdc` binary from the [mermaid.cli project](https://github.com/mermaidjs/mermaid.cli) if you plan to compile graphs in Emacs
 
 ## Usage
 Currently supporting flow charts and sequence diagrams with syntax coloring and indentation.
