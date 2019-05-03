@@ -48,6 +48,7 @@
 ;;; Code:
 
 (require 'f)
+(require 'browse-url)
 
 (defgroup mermaid-mode nil
   "Major mode for working with mermaid graphs."
@@ -106,10 +107,15 @@ STR is the declaration."
     (call-process mermaid-mmdc-location nil "*mmdc*" nil "-i" input "-o" output)))
 
 (defun mermaid-open-browser ()
-  "Open the current mermaid graph in the live editor."
+  "Open the current buffer or active region in the mermaid live editor."
   (interactive)
-  (let ((data (replace-regexp-in-string "\n" "" (base64-encode-string (buffer-string)))))
-    (browse-url-default-browser (concat "https://mermaidjs.github.io/mermaid-live-editor/#/edit/" data))))
+  (browse-url-default-browser
+   (concat "https://mermaidjs.github.io/mermaid-live-editor/#/edit/"
+           (replace-regexp-in-string "\n" ""
+                                     (base64-encode-string
+                                      (if (use-region-p)
+                                          (buffer-substring-no-properties (region-beginning) (region-end))
+                                        (buffer-string)))))))
 
 (defun mermaid-open-doc ()
   "Open the mermaid home page and doc."
