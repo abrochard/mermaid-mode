@@ -1,3 +1,5 @@
+[![MELPA](https://melpa.org/packages/mermaid-mode-badge.svg)](https://melpa.org/#/mermaid-mode)
+
 # mermaid-mode
 Emacs major mode for working with [mermaid graphs](https://mermaidjs.github.io/)
 
