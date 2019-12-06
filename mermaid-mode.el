@@ -49,6 +49,8 @@
 
 (require 'f)
 (require 'browse-url)
+(require 'ob)
+(require 'ob-eval)
 
 (defgroup mermaid-mode nil
   "Major mode for working with mermaid graphs."
@@ -57,16 +59,31 @@
 
 (defcustom mermaid-mmdc-location "mmdc"
   "Mmdc location."
+  :type 'string
   :group 'mermaid-mode)
 
 (defcustom mermaid-output-format ".png"
   "Mmdc output format."
-  :group 'mermaid-mode)
+  :group 'mermaid-mode
+  :type 'string)
 
 (defconst mermaid-font-lock-keywords
-      '(("graph \\|subgraph \\|end\\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
-        ("---\\|-?->*\\+?" . font-lock-function-name-face)
-        ("LR\\|TD\\|participant \\|Note" . font-lock-constant-face)))
+      '(("graph \\|subgraph \\|end \\|pie \\|gantt \\|classDiagram \\|stateDiagram \\|title \\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
+        ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
+        ("LR\\|TD\\|TB\\|RL\\|DT\\|BT\\|participant \\|Note" . font-lock-constant-face)))
+
+(defvar org-babel-default-header-args:mermaid
+  '((:results . "file") (:exports . "results"))
+  "Default arguments for evaluating a mermaid source block.")
+
+(defun org-babel-execute:mermaid (body params)
+  (let* ((out-file (or (cdr (assoc :file params))
+                       (error "mermaid requires a \":file\" header argument")))
+         (cmd (concat (shell-quote-argument (expand-file-name mermaid-mmdc-location))
+                        " -o " (org-babel-process-file-name out-file)
+                        " -i " )))
+    (org-babel-eval cmd body)
+    nil))
 
 (defun mermaid--locate-declaration (str)
   "Locate a certain declaration and return the line difference and indentation.
