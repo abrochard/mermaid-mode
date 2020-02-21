@@ -148,8 +148,8 @@ STR is the declaration."
 
 ;;;###autoload
 (define-derived-mode mermaid-mode fundamental-mode "mermaid"
-  (setq font-lock-defaults '(mermaid-font-lock-keywords))
-  (setq indent-line-function 'mermaid-indent-line))
+  (setq-local font-lock-defaults '(mermaid-font-lock-keywords))
+  (setq-local indent-line-function 'mermaid-indent-line))
 
 (provide 'mermaid-mode)
 ;;; mermaid-mode.el ends here
