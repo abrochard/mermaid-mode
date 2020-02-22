@@ -68,7 +68,7 @@
   :type 'string)
 
 (defconst mermaid-font-lock-keywords
-      '(("graph \\|subgraph \\|end \\|pie \\|gantt \\|classDiagram \\|stateDiagram \\|title \\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
+      '(("graph \\|subgraph \\|end?\\|pie?\\|gantt?\\|classDiagram?\\|stateDiagram?\\|title \\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
         ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
         ("LR\\|TD\\|TB\\|RL\\|DT\\|BT\\|participant \\|Note" . font-lock-constant-face)))
 
@@ -77,12 +77,14 @@
   "Default arguments for evaluating a mermaid source block.")
 
 (defun org-babel-execute:mermaid (body params)
-  (let* ((out-file (or (cdr (assoc :file params))
+  (let* ((outfile (or (cdr (assoc :file params))
                        (error "mermaid requires a \":file\" header argument")))
-         (cmd (concat (shell-quote-argument (expand-file-name mermaid-mmdc-location))
-                        " -o " (org-babel-process-file-name out-file)
-                        " -i " )))
-    (org-babel-eval cmd body)
+		 (infile (make-temp-file "org-babel" nil ".mmd" body))
+         (cmd (concat (shell-quote-argument mermaid-mmdc-location)
+                        " -o " (org-babel-process-file-name outfile)
+                        " -i " infile)))
+    (org-babel-eval cmd "")
+	(delete-file infile)
     nil))
 
 (defun mermaid--locate-declaration (str)
