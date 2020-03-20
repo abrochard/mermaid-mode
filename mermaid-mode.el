@@ -67,6 +67,11 @@
   :group 'mermaid-mode
   :type 'string)
 
+(defcustom mermaid-flags ""
+  "Additional flags to pass to the mermaid.cli."
+  :group 'mermaid-mode
+  :type 'string)
+
 (defconst mermaid-font-lock-keywords
       '(("graph \\|subgraph \\|end \\|pie \\|gantt \\|classDiagram \\|stateDiagram \\|title \\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
         ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
@@ -77,11 +82,12 @@
   "Default arguments for evaluating a mermaid source block.")
 
 (defun org-babel-execute:mermaid (body params)
+  "Execute command with BODY and PARAMS from src block."
   (let* ((out-file (or (cdr (assoc :file params))
-                       (error "mermaid requires a \":file\" header argument")))
+                       (error "Mermaid requires a \":file\" header argument")))
          (cmd (concat (shell-quote-argument (expand-file-name mermaid-mmdc-location))
                         " -o " (org-babel-process-file-name out-file)
-                        " -i " )))
+                        " -i " mermaid-flags)))
     (org-babel-eval cmd body)
     nil))
 
@@ -121,7 +127,7 @@ STR is the declaration."
   (interactive)
   (let* ((input (f-filename (buffer-file-name)))
          (output (concat (file-name-sans-extension input) mermaid-output-format)))
-    (call-process mermaid-mmdc-location nil "*mmdc*" nil "-i" input "-o" output)))
+    (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))))
 
 (defun mermaid-open-browser ()
   "Open the current buffer or active region in the mermaid live editor."
