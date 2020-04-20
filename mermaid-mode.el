@@ -132,7 +132,7 @@ STR is the declaration."
 (defun mermaid-open-browser ()
   "Open the current buffer or active region in the mermaid live editor."
   (interactive)
-  (browse-url-default-browser
+  (browse-url
    (concat "https://mermaidjs.github.io/mermaid-live-editor/#/edit/"
            (replace-regexp-in-string "\n" ""
                                      (base64-encode-string
@@ -143,7 +143,7 @@ STR is the declaration."
 (defun mermaid-open-doc ()
   "Open the mermaid home page and doc."
   (interactive)
-  (browse-url-default-browser "https://mermaidjs.github.io/"))
+  (browse-url "https://mermaidjs.github.io/"))
 
 (defvar mermaid-mode-map
   (let ((map (make-sparse-keymap)))
