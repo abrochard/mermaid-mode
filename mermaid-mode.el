@@ -67,15 +67,20 @@
   :group 'mermaid-mode
   :type 'string)
 
+(defcustom mermaid-tmp-dir "/tmp/"
+  "Dir for tmp files."
+  :group 'mermaid-mode
+  :type 'string)
+
 (defcustom mermaid-flags ""
   "Additional flags to pass to the mermaid.cli."
   :group 'mermaid-mode
   :type 'string)
 
 (defconst mermaid-font-lock-keywords
-      '(("graph \\|subgraph \\|end \\|pie \\|gantt \\|classDiagram \\|stateDiagram \\|title \\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
-        ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
-        ("LR\\|TD\\|TB\\|RL\\|DT\\|BT\\|participant \\|Note" . font-lock-constant-face)))
+  '(("graph \\|subgraph \\|end \\|pie \\|gantt \\|classDiagram \\|stateDiagram \\|title \\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
+    ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
+    ("LR\\|TD\\|TB\\|RL\\|DT\\|BT\\|participant \\|Note" . font-lock-constant-face)))
 
 (defvar org-babel-default-header-args:mermaid
   '((:results . "file") (:exports . "results"))
@@ -86,8 +91,8 @@
   (let* ((out-file (or (cdr (assoc :file params))
                        (error "Mermaid requires a \":file\" header argument")))
          (cmd (concat (shell-quote-argument (expand-file-name mermaid-mmdc-location))
-                        " -o " (org-babel-process-file-name out-file)
-                        " -i " mermaid-flags)))
+                      " -o " (org-babel-process-file-name out-file)
+                      " -i " mermaid-flags)))
     (org-babel-eval cmd body)
     nil))
 
@@ -125,9 +130,32 @@ STR is the declaration."
 (defun mermaid-compile ()
   "Compile the current mermaid file using mmdc."
   (interactive)
-  (let* ((input (f-filename (buffer-file-name)))
+  (mermaid-compile-file (f-filename (buffer-file-name))))
+
+(defun mermaid-compile-buffer ()
+  "Compile the current mermaid buffer using mmdc."
+  (interactive)
+  (point-to-register 'a)
+  (mark-whole-buffer)
+  (mermaid-compile-region)
+  (deactivate-mark)
+  (jump-to-register 'a))
+
+(defun mermaid-compile-region ()
+  "Compile the current mermaid region using mmdc."
+  (interactive)
+  (let* ((tmp-file-name (concat mermaid-tmp-dir "current-region.mmd")))
+    (when (use-region-p)
+      (write-region (region-beginning) (region-end) tmp-file-name)
+      (mermaid-compile-file tmp-file-name))))
+
+(defun mermaid-compile-file (file-name)
+  "Compile the given mermaid file using mmdc."
+  (interactive "fFilename: ")
+  (let* ((input file-name)
          (output (concat (file-name-sans-extension input) mermaid-output-format)))
-    (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))))
+    (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))
+    (find-alternate-file-other-window output)))
 
 (defun mermaid-open-browser ()
   "Open the current buffer or active region in the mermaid live editor."
@@ -147,9 +175,12 @@ STR is the declaration."
 
 (defvar mermaid-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-c") 'mermaid-compile)
-    (define-key map (kbd "C-c C-o") 'mermaid-open-browser)
-    (define-key map (kbd "C-c C-d") 'mermaid-open-doc)
+    (define-key map (kbd "C-c m c") 'mermaid-compile)
+    (define-key map (kbd "C-c m f") 'mermaid-compile-file)
+    (define-key map (kbd "C-c m b") 'mermaid-compile-buffer)
+    (define-key map (kbd "C-c m r") 'mermaid-compile-region)
+    (define-key map (kbd "C-c m o") 'mermaid-open-browser)
+    (define-key map (kbd "C-c m d") 'mermaid-open-doc)
     map))
 
 ;;;###autoload
