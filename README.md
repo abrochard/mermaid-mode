@@ -6,7 +6,7 @@ Emacs major mode for working with [mermaid graphs](https://mermaidjs.github.io/)
 
 ![Screenshot](./assets/screenshot.jpg "Screenshot")
 
-[![Thumbnail](./assets/thumbnail.png)](./assets/screencast.mp4 "Screencast")
+[![Thumbnail](./assets/thumbnail.png)](https://vimeo.com/414458581 "Screencast")
 
 ## Installation
 
