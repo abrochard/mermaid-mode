@@ -33,17 +33,23 @@
 
 ;; Currently supporting flow charts and sequence diagrams with syntax coloring and indentation.
 
-;; C-c C-c to compile to an image
-;; C-c C-o to open in the live editor
-;; C-c C-d to open the official doc
+;; C-c C-d c to compile to an image
+;; C-c C-d f to compile file to an image
+;; C-c C-d r to compile region to an image
+;; C-c C-d b to compile buffer to an image
+;; C-c C-d o to open in the live editor
+;; C-c C-d d to open the official doc
 
 ;;; Customization:
 
-;; You can specify the location of mmdc with the variable `mermaid-mmdc-location`,
+;; You can specify the location of `mmdc` with the variable `mermaid-mmdc-location`,
 ;; the default assumes you have the binary in your exec PATH.
 
-;; By default `mmdc` will compile to png format.
+;; By default `mmdc` will compile to `png` format.
 ;; You can change that by setting the variable `mermaid-output-format`.
+
+;; By default `mmdc` will use `/tmp` to store tmp-files.
+;; You can change that by setting the variable `mermaid-tmp-dir`.
 
 ;;; Code:
 
@@ -135,11 +141,9 @@ STR is the declaration."
 (defun mermaid-compile-buffer ()
   "Compile the current mermaid buffer using mmdc."
   (interactive)
-  (point-to-register 'a)
-  (mark-whole-buffer)
-  (mermaid-compile-region)
-  (deactivate-mark)
-  (jump-to-register 'a))
+  (let* ((tmp-file-name (concat mermaid-tmp-dir "current-buffer.mmd")))
+    (write-region (point-min) (point-max) tmp-file-name)
+    (mermaid-compile-file tmp-file-name)))
 
 (defun mermaid-compile-region ()
   "Compile the current mermaid region using mmdc."
@@ -155,7 +159,7 @@ STR is the declaration."
   (let* ((input file-name)
          (output (concat (file-name-sans-extension input) mermaid-output-format)))
     (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))
-    (find-alternate-file-other-window output)))
+    (find-file-other-window output)))
 
 (defun mermaid-open-browser ()
   "Open the current buffer or active region in the mermaid live editor."
@@ -175,12 +179,12 @@ STR is the declaration."
 
 (defvar mermaid-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c m c") 'mermaid-compile)
-    (define-key map (kbd "C-c m f") 'mermaid-compile-file)
-    (define-key map (kbd "C-c m b") 'mermaid-compile-buffer)
-    (define-key map (kbd "C-c m r") 'mermaid-compile-region)
-    (define-key map (kbd "C-c m o") 'mermaid-open-browser)
-    (define-key map (kbd "C-c m d") 'mermaid-open-doc)
+    (define-key map (kbd "C-c C-d c") 'mermaid-compile)
+    (define-key map (kbd "C-c C-d f") 'mermaid-compile-file)
+    (define-key map (kbd "C-c C-d b") 'mermaid-compile-buffer)
+    (define-key map (kbd "C-c C-d r") 'mermaid-compile-region)
+    (define-key map (kbd "C-c C-d o") 'mermaid-open-browser)
+    (define-key map (kbd "C-c C-d d") 'mermaid-open-doc)
     map))
 
 ;;;###autoload

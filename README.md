@@ -18,15 +18,16 @@ Emacs major mode for working with [mermaid graphs](https://mermaidjs.github.io/)
 Currently supporting flow charts and sequence diagrams with syntax coloring and indentation.
 
 ```text
-C-c m c - compile current file to an image
-C-c m f - compile given file to an image
-C-c m b - compile current buffer to an image
-C-c m r - compile current region to an image
-C-c m o - open in the live editor
-C-c m d - open the official doc
+C-c C-d c - compile current file to an image
+C-c C-d f - compile given file to an image
+C-c C-d b - compile current buffer to an image
+C-c C-d r - compile current region to an image
+C-c C-d o - open in the live editor
+C-c C-d d - open the official doc
 ```
+Note: `C-d` is inspired by `mermai(d)` (`C-m` was/is obviously taken).
 
-Note: All compile commands will open the out 
+Note: All compile commands will open the output in a buffer to view the resulting image.
 
 ## Customization
 
