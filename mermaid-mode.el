@@ -33,12 +33,12 @@
 
 ;; Currently supporting flow charts and sequence diagrams with syntax coloring and indentation.
 
-;; C-c C-d c to compile to an image
-;; C-c C-d f to compile file to an image
-;; C-c C-d r to compile region to an image
-;; C-c C-d b to compile buffer to an image
-;; C-c C-d o to open in the live editor
-;; C-c C-d d to open the official doc
+;; C-c C-c to compile to an image
+;; C-c C-f to compile file to an image
+;; C-c C-r to compile region to an image
+;; C-c C-b to compile buffer to an image
+;; C-c C-o to open in the live editor
+;; C-c C-d to open the official doc
 
 ;;; Customization:
 
@@ -179,12 +179,12 @@ STR is the declaration."
 
 (defvar mermaid-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-d c") 'mermaid-compile)
-    (define-key map (kbd "C-c C-d f") 'mermaid-compile-file)
-    (define-key map (kbd "C-c C-d b") 'mermaid-compile-buffer)
-    (define-key map (kbd "C-c C-d r") 'mermaid-compile-region)
-    (define-key map (kbd "C-c C-d o") 'mermaid-open-browser)
-    (define-key map (kbd "C-c C-d d") 'mermaid-open-doc)
+    (define-key map (kbd "C-c C-c") 'mermaid-compile)
+    (define-key map (kbd "C-c C-f") 'mermaid-compile-file)
+    (define-key map (kbd "C-c C-b") 'mermaid-compile-buffer)
+    (define-key map (kbd "C-c C-r") 'mermaid-compile-region)
+    (define-key map (kbd "C-c C-o") 'mermaid-open-browser)
+    (define-key map (kbd "C-c C-d") 'mermaid-open-doc)
     map))
 
 ;;;###autoload
