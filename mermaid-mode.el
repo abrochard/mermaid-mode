@@ -96,10 +96,13 @@
   "Execute command with BODY and PARAMS from src block."
   (let* ((out-file (or (cdr (assoc :file params))
                        (error "Mermaid requires a \":file\" header argument")))
-         (cmd (concat (shell-quote-argument (expand-file-name mermaid-mmdc-location))
+         (temp-file (org-babel-temp-file "mermaid-"))
+         (cmd (concat (shell-quote-argument mermaid-mmdc-location)
                       " -o " (org-babel-process-file-name out-file)
-                      " -i " mermaid-flags)))
-    (org-babel-eval cmd body)
+                      " -i " temp-file
+                      " " mermaid-flags)))
+    (with-temp-file temp-file (insert body))
+    (org-babel-eval cmd "")
     nil))
 
 (defun mermaid--locate-declaration (str)
