@@ -162,7 +162,7 @@ STR is the declaration."
   (let* ((input file-name)
          (output (concat (file-name-sans-extension input) mermaid-output-format)))
     (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))
-    (find-file-other-window output)))
+    (display-buffer (find-file-noselect output t))))
 
 (defun mermaid-open-browser ()
   "Open the current buffer or active region in the mermaid live editor."
