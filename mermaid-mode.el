@@ -27,7 +27,7 @@
 ;;; Commentary:
 
 ;; Major mode for working with mermaid graphs.
-;; See https://mermaidjs.github.io/
+;; See https://mermaid-js.github.io/
 
 ;;; Usage:
 
@@ -168,7 +168,7 @@ STR is the declaration."
   "Open the current buffer or active region in the mermaid live editor."
   (interactive)
   (browse-url
-   (concat "https://mermaidjs.github.io/mermaid-live-editor/#/edit/"
+   (concat "https://mermaid-js.github.io/mermaid-live-editor/#/edit/"
            (replace-regexp-in-string "\n" ""
                                      (base64-encode-string
                                       (if (use-region-p)
@@ -178,7 +178,7 @@ STR is the declaration."
 (defun mermaid-open-doc ()
   "Open the mermaid home page and doc."
   (interactive)
-  (browse-url "https://mermaidjs.github.io/"))
+  (browse-url "https://mermaid-js.github.io/"))
 
 (defvar mermaid-mode-map
   (let ((map (make-sparse-keymap)))
