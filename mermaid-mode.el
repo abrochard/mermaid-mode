@@ -79,7 +79,7 @@
   :type 'string)
 
 (defcustom mermaid-flags ""
-  "Additional flags to pass to the mermaid.cli."
+  "Additional flags to pass to the mermaid-cli."
   :group 'mermaid-mode
   :type 'string)
 
