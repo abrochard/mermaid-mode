@@ -164,16 +164,20 @@ STR is the declaration."
     (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))
     (display-buffer (find-file-noselect output t))))
 
+(defun mermaid-make-browser-string (diagram)
+  "Create live-editor for the browser."
+  (concat "https://mermaid-js.github.io/mermaid-live-editor/#/edit/"
+          (replace-regexp-in-string "\n" ""
+                                    (base64-encode-string
+                                     (format "{\"code\":%s,\"mermaid\":{\"theme\":\"default\"},\"updateEditor\":false}"
+                                             (json-encode diagram))))))
+
 (defun mermaid-open-browser ()
   "Open the current buffer or active region in the mermaid live editor."
   (interactive)
-  (browse-url
-   (concat "https://mermaid-js.github.io/mermaid-live-editor/#/edit/"
-           (replace-regexp-in-string "\n" ""
-                                     (base64-encode-string
-                                      (if (use-region-p)
-                                          (buffer-substring-no-properties (region-beginning) (region-end))
-                                        (buffer-string)))))))
+  (browse-url (mermaid-make-browser-string (if (use-region-p)
+                                               (buffer-substring-no-properties (region-beginning) (region-end))
+                                             (buffer-string)))))
 
 (defun mermaid-open-doc ()
   "Open the mermaid home page and doc."
