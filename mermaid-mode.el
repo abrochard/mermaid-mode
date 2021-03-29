@@ -193,7 +193,10 @@ STR is the declaration."
 ;;;###autoload
 (define-derived-mode mermaid-mode fundamental-mode "mermaid"
   (setq-local font-lock-defaults '(mermaid-font-lock-keywords))
-  (setq-local indent-line-function 'mermaid-indent-line))
+  (setq-local indent-line-function 'mermaid-indent-line)
+  (setq-local comment-start "%%")
+  (setq-local comment-end "")
+  (setq-local comment-start-skip "%%+ *"))
 
 (provide 'mermaid-mode)
 ;;; mermaid-mode.el ends here
