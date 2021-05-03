@@ -84,9 +84,9 @@
   :type 'string)
 
 (defconst mermaid-font-lock-keywords
-  '(("graph \\|subgraph \\|end \\|pie \\|gantt \\|classDiagram \\|stateDiagram \\|title \\|sequenceDiagram\\|loop \\|alt \\|else \\|opt" . font-lock-keyword-face)
+  `((,(regexp-opt '("graph" "subgraph" "end" "flowchart" "sequenceDiagram" "classDiagram" "stateDiagram" "erDiagram" "gantt" "pie" "loop" "alt" "else" "opt") 'words) . font-lock-keyword-face)
     ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
-    ("LR\\|TD\\|TB\\|RL\\|DT\\|BT\\|participant \\|Note" . font-lock-constant-face)))
+    (,(regexp-opt '("TB" "TD" "BT" "LR" "RL" "DT" "BT" "class" "title" "section" "participant" "dataFormat" "Note") 'words) . font-lock-constant-face)))
 
 (defvar org-babel-default-header-args:mermaid
   '((:results . "file") (:exports . "results"))
