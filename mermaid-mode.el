@@ -94,16 +94,20 @@
 
 (defun org-babel-execute:mermaid (body params)
   "Execute command with BODY and PARAMS from src block."
-  (let* ((out-file (or (cdr (assoc :file params))
-                       (error "Mermaid requires a \":file\" header argument")))
-         (temp-file (org-babel-temp-file "mermaid-"))
+  (let* ((in-file (org-babel-temp-file "mermaid-"))
+         (out-file (or (cdr (assoc :file params))
+                       (org-babel-temp-file "mermaid-" mermaid-output-format)))
          (cmd (concat (shell-quote-argument mermaid-mmdc-location)
+                      " -i " (org-babel-process-file-name in-file)
                       " -o " (org-babel-process-file-name out-file)
-                      " -i " temp-file
                       " " mermaid-flags)))
-    (with-temp-file temp-file (insert body))
+    (with-temp-file in-file (insert body))
     (org-babel-eval cmd "")
-    nil))
+    (unless (cdr (assq :file params))
+      out-file)))
+
+(defun org-babel-prep-session:mermaid (session params)
+  (error "Mermaid does not support sessions."))
 
 (defun mermaid--locate-declaration (str)
   "Locate a certain declaration and return the line difference and indentation.
