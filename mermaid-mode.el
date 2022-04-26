@@ -186,6 +186,16 @@ DIAGRAM is a string of mermaid-js code to be displayed in the live-editor."
   (interactive)
   (browse-url "https://mermaid-js.github.io/"))
 
+(defvar mermaid-syntax-table nil
+  "Syntax table for `mermaid-mode'.")
+
+(setq mermaid-syntax-table
+      (let ((syn-table (make-syntax-table)))
+        ;; Comment style “%% ...”
+        (modify-syntax-entry ?% ". 124" syn-table)
+        (modify-syntax-entry ?\n ">" syn-table)
+        syn-table))
+
 (defvar mermaid-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-c") 'mermaid-compile)
@@ -197,7 +207,8 @@ DIAGRAM is a string of mermaid-js code to be displayed in the live-editor."
     map))
 
 ;;;###autoload
-(define-derived-mode mermaid-mode fundamental-mode "mermaid"
+(define-derived-mode mermaid-mode prog-mode "mermaid"
+  :syntax-table mermaid-syntax-table
   (setq-local font-lock-defaults '(mermaid-font-lock-keywords))
   (setq-local indent-line-function 'mermaid-indent-line)
   (setq-local comment-start "%%")
