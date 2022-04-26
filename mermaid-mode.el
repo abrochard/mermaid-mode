@@ -88,6 +88,14 @@
     ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
     (,(regexp-opt '("TB" "TD" "BT" "LR" "RL" "DT" "BT" "class" "title" "section" "participant" "dataFormat" "Note") 'words) . font-lock-constant-face)))
 
+(defvar mermaid-syntax-table
+  (let ((syntax-table (make-syntax-table)))
+    ;; Comment style "%% ..."
+    (modify-syntax-entry ?% ". 124" syntax-table)
+    (modify-syntax-entry ?\n ">" syntax-table)
+    syntax-table)
+  "Syntax table for `mermaid-mode'.")
+
 (defvar org-babel-default-header-args:mermaid
   '((:results . "file") (:exports . "results"))
   "Default arguments for evaluating a mermaid source block.")
@@ -185,16 +193,6 @@ DIAGRAM is a string of mermaid-js code to be displayed in the live-editor."
   "Open the mermaid home page and doc."
   (interactive)
   (browse-url "https://mermaid-js.github.io/"))
-
-(defvar mermaid-syntax-table nil
-  "Syntax table for `mermaid-mode'.")
-
-(setq mermaid-syntax-table
-      (let ((syn-table (make-syntax-table)))
-        ;; Comment style “%% ...”
-        (modify-syntax-entry ?% ". 124" syn-table)
-        (modify-syntax-entry ?\n ">" syn-table)
-        syn-table))
 
 (defvar mermaid-mode-map
   (let ((map (make-sparse-keymap)))
