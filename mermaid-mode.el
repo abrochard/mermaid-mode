@@ -147,7 +147,7 @@ STR is the declaration."
 (defun mermaid-compile ()
   "Compile the current mermaid file using mmdc."
   (interactive)
-  (mermaid-compile-file (f-filename (buffer-file-name))))
+  (mermaid-compile-file (buffer-file-name)))
 
 (defun mermaid-compile-buffer ()
   "Compile the current mermaid buffer using mmdc."
