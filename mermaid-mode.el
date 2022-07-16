@@ -86,7 +86,7 @@
 (defconst mermaid-font-lock-keywords
   `((,(regexp-opt '("graph" "subgraph" "end" "flowchart" "sequenceDiagram" "classDiagram" "stateDiagram" "erDiagram" "gantt" "pie" "loop" "alt" "else" "opt") 'words) . font-lock-keyword-face)
     ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
-    (,(regexp-opt '("TB" "TD" "BT" "LR" "RL" "DT" "BT" "class" "title" "section" "participant" "dataFormat" "Note") 'words) . font-lock-constant-face)))
+    (,(regexp-opt '("TB" "TD" "BT" "LR" "RL" "DT" "BT" "class" "title" "section" "participant" "actor" "dataFormat" "Note") 'words) . font-lock-constant-face)))
 
 (defvar mermaid-syntax-table
   (let ((syntax-table (make-syntax-table)))
