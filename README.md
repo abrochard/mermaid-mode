@@ -61,7 +61,7 @@ To customize the key bindings but this into your `init.el` ...
 ```
 
 ### mermaid-cli in Docker 
-To render mermaid charts without needing to install nodejs+mermaid-cli, you can use the [docker image](TODO) and set your location and flags:
+To render mermaid charts without needing to install nodejs+mermaid-cli, you can use the [docker image](ghcr.io/mermaid-js/mermaid-cli/mermaid-cli) and set your location and flags:
 
 ```
 (setq mermaid-mmdc-location "docker")
