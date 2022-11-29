@@ -214,7 +214,7 @@ DIAGRAM is a string of mermaid-js code to be displayed in the live-editor."
   (setq-local comment-start-skip "%%+ *"))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.mmd\\" . mermaid-mode))
+(add-to-list 'auto-mode-alist '("\\.mmd\\'" . mermaid-mode))
 
 (provide 'mermaid-mode)
 ;;; mermaid-mode.el ends here
