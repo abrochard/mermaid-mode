@@ -127,9 +127,9 @@ STR is the declaration."
   "Determine the indentation level that this line should have."
   (save-excursion
     (end-of-line)
-    (let ((graph (mermaid--locate-declaration "^graph\\|sequenceDiagram"))
+    (let ((graph (mermaid--locate-declaration "^graph\\|sequenceDiagram\\|^gantt"))
           (subgraph (mermaid--locate-declaration "subgraph \\|loop \\|alt \\|opt"))
-          (both (mermaid--locate-declaration "^graph \\|^sequenceDiagram$\\|subgraph \\|loop \\|alt \\|opt"))
+          (both (mermaid--locate-declaration "^graph \\|^sequenceDiagram$\\|subgraph \\|loop \\|alt \\|opt\\|^gantt"))
           (else (mermaid--locate-declaration "else "))
           (end (mermaid--locate-declaration "^ *end *$")))
       (cond ((equal (car graph) 0) 0) ;; this is a graph declaration
