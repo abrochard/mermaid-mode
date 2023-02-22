@@ -39,7 +39,7 @@ By default `mmdc` will compile to png format. You can change that by setting the
 By default `mermaid-tmp-dir` points to `\tmp\`. Feel free to set it to a more appropriate location that works for you (e.g. on windows).
 
 ### Key bindings
-To customize the key bindings but this into your `init.el` ...
+To customize the key bindings put this into your `init.el` ...
 
 ```elisp
 (setq mermaid-mode-map
