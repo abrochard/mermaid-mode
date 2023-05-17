@@ -22,7 +22,7 @@
 ;; Keywords: mermaid graphs tools processes
 ;; URL: https://github.com/abrochard/mermaid-mode
 ;; License: GNU General Public License >= 3
-;; Package-Requires: ((f "0.20.0") (emacs "25.3"))
+;; Package-Requires: ((emacs "25.3"))
 
 ;;; Commentary:
 
@@ -53,7 +53,6 @@
 
 ;;; Code:
 
-(require 'f)
 (require 'browse-url)
 (require 'ob)
 (require 'ob-eval)
