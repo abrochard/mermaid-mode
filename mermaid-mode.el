@@ -178,13 +178,15 @@ STR is the declaration."
   "Compile the given mermaid file using mmdc."
   (interactive "fFilename: ")
   (let* ((input file-name)
-         (output (concat (file-name-sans-extension input) mermaid-output-format)))
-    (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))
-    (let ((buffer (find-file-noselect output t)))
-     (display-buffer buffer)
-     (save-excursion
-       (set-buffer buffer)
-       (auto-revert-mode)))))
+         (output (concat (file-name-sans-extension input) mermaid-output-format))
+         (exit-code (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))))
+    (if (zerop exit-code)
+        (let ((buffer (find-file-noselect output t)))
+          (display-buffer buffer)
+          (save-excursion
+            (set-buffer buffer)
+            (auto-revert-mode)))
+      (pop-to-buffer "*mmdc*"))))
 
 (defun mermaid--make-browser-string (diagram)
   "Create live-editor string for browser access.
