@@ -180,7 +180,11 @@ STR is the declaration."
   (let* ((input file-name)
          (output (concat (file-name-sans-extension input) mermaid-output-format)))
     (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))
-    (display-buffer (find-file-noselect output t))))
+    (let ((buffer (find-file-noselect output t)))
+     (display-buffer buffer)
+     (save-excursion
+       (set-buffer buffer)
+       (auto-revert-mode)))))
 
 (defun mermaid--make-browser-string (diagram)
   "Create live-editor string for browser access.
