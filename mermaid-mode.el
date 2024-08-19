@@ -82,6 +82,11 @@
   :group 'mermaid-mode
   :type 'string)
 
+(defcustom mermaid-indentation-level 4
+  "Spaces count for indentation"
+  :group 'mermaid-mode
+  :type 'number)
+
 (defconst mermaid-font-lock-keywords
   `((,(regexp-opt '("graph" "subgraph" "end" "flowchart" "sequenceDiagram" "classDiagram" "stateDiagram" "erDiagram" "gantt" "pie" "loop" "alt" "else" "opt") 'words) . font-lock-keyword-face)
     ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
@@ -141,11 +146,11 @@ STR is the declaration."
           (end (mermaid--locate-declaration "^ *end *$")))
       (cond ((equal (car graph) 0) 0) ;; this is a graph declaration
             ((equal (car end) 0) (cdr subgraph)) ;; this is "end", indent to nearest subgraph
-            ((equal (car subgraph) 0) (+ 4 (cdr graph))) ;; this is a subgraph
+            ((equal (car subgraph) 0) (+ mermaid-indentation-level (cdr graph))) ;; this is a subgraph
             ((equal (car else) 0) (cdr subgraph)) ;; this is "else:, indent to nearest alt
             ;; everything else
-            ((< (car end) 0) (+ 4 (cdr both))) ;; no end in sight
-            ((< (car both) (car end)) (+ 4 (cdr both))) ;; (sub)graph declaration closer, +4
+            ((< (car end) 0) (+ mermaid-indentation-level (cdr both))) ;; no end in sight
+            ((< (car both) (car end)) (+ mermaid-indentation-level (cdr both))) ;; (sub)graph declaration closer, +4
             (t (cdr end)) ;; end declaration closer, same indent
             ))))
 
@@ -188,13 +193,23 @@ STR is the declaration."
             (auto-revert-mode)))
       (pop-to-buffer "*mmdc*"))))
 
+(defun mermaid--base64-encode-multibyte-string (input)
+  "Base64 encode the multibyte string INPUT."
+  (let ((coding-system-for-write 'utf-8))
+    (with-temp-buffer
+      (set-buffer-multibyte t)
+      (insert input)
+      (encode-coding-region (point-min) (point-max) 'utf-8)
+      (base64-encode-region (point-min) (point-max))
+      (buffer-string))))
+
 (defun mermaid--make-browser-string (diagram)
   "Create live-editor string for browser access.
 
 DIAGRAM is a string of mermaid-js code to be displayed in the live-editor."
   (concat "https://mermaid-js.github.io/mermaid-live-editor/#/edit/"
           (replace-regexp-in-string "\n" ""
-                                    (base64-encode-string
+                                    (mermaid--base64-encode-multibyte-string
                                      (format "{\"code\":%s,\"mermaid\":{\"theme\":\"default\"},\"updateEditor\":false}"
                                              (json-encode diagram))))))
 
