@@ -1,0 +1,4 @@
+rule compile_file
+  command = emacs -batch --eval "(setq byte-compile-error-on-warn t)" $args -f batch-byte-compile $in
+
+build mermaid-mode.elc: compile_file mermaid-mode.el
