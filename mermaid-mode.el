@@ -188,8 +188,7 @@ STR is the declaration."
     (if (zerop exit-code)
         (let ((buffer (find-file-noselect output t)))
           (display-buffer buffer)
-          (save-excursion
-            (set-buffer buffer)
+          (with-current-buffer buffer
             (auto-revert-mode)))
       (pop-to-buffer "*mmdc*"))))
 
