@@ -184,7 +184,7 @@ STR is the declaration."
   (interactive "fFilename: ")
   (let* ((input file-name)
          (output (concat (file-name-sans-extension input) mermaid-output-format))
-         (exit-code (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ") (list "-i" input "-o" output)))))
+         (exit-code (apply #'call-process mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " " t) (list "-i" input "-o" output)))))
     (if (zerop exit-code)
         (let ((buffer (find-file-noselect output t)))
           (display-buffer buffer)
