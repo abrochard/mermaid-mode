@@ -58,7 +58,6 @@ graph TD
     G-->H"))
 
 (ert-deftest mermaid-indent-nested-subgraphs ()
-  :expected-result :failed
   (mermaid-test-indentation
    "
 graph TD
@@ -118,7 +117,6 @@ sequenceDiagram
     end"))
 
 (ert-deftest mermaid-indent-nested-alt-in-loop ()
-  :expected-result :failed
   (mermaid-test-indentation
    "
 sequenceDiagram
@@ -204,7 +202,6 @@ sequenceDiagram
 
 (ert-deftest mermaid-invalid-closer ()
   "Indenting invalid buffer should not cause errors"
-  :expected-result :failed
   (mermaid-test-indentation
    "
 end"
