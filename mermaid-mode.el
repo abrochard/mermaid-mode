@@ -88,8 +88,8 @@
   :type 'number)
 
 (defconst mermaid-diagram-starter-keywords
-  '("graph" "classDiagram" "sequenceDiagram" "stateDiagram" "gantt"
-    "erDiagram" "flowchart" "pie")
+  '("graph" "classDiagram" "sequenceDiagram" "stateDiagram" "stateDiagram-v2"
+    "gantt" "erDiagram" "flowchart" "pie")
   "Keywords that start the diagram, typically have indentation of 0.")
 
 (defconst mermaid-diagram-starters-re
