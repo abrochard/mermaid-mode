@@ -87,8 +87,24 @@
   :group 'mermaid-mode
   :type 'number)
 
+(defconst mermaid-diagram-starter-keywords
+  '("graph" "classDiagram" "sequenceDiagram" "stateDiagram" "stateDiagram-v2"
+    "gantt" "erDiagram" "flowchart" "pie")
+  "Keywords that start the diagram, typically have indentation of 0.")
+
+(defconst mermaid-diagram-starters-re
+  (regexp-opt mermaid-diagram-starter-keywords 'words))
+
+(defconst mermaid-branch-starters
+  (append mermaid-diagram-starter-keywords
+          '("loop" "alt" "else" "opt" "subgraph"))
+  "Keywords that cause next line indentation to increase.")
+
+(defconst mermaid-branch-starters-re
+  (regexp-opt mermaid-branch-starters 'words))
+
 (defconst mermaid-font-lock-keywords
-  `((,(regexp-opt '("graph" "subgraph" "end" "flowchart" "sequenceDiagram" "classDiagram" "stateDiagram" "erDiagram" "gantt" "pie" "loop" "alt" "else" "opt") 'words) . font-lock-keyword-face)
+  `((,(regexp-opt (append mermaid-branch-starters '("end")) 'words) . font-lock-keyword-face)
     ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
     (,(regexp-opt '("TB" "TD" "BT" "LR" "RL" "DT" "BT" "class" "title" "section" "participant" "actor" "dataFormat" "Note") 'words) . font-lock-constant-face)))
 
@@ -125,34 +141,41 @@
     (org-babel-eval cmd "")
     nil))
 
-(defun mermaid--locate-declaration (str)
-  "Locate a certain declaration and return the line difference and indentation.
-
-STR is the declaration."
-  (let ((l (line-number-at-pos)))
-    (save-excursion
-      (if (re-search-backward str (point-min) t)
-          (cons (- l (line-number-at-pos)) (current-indentation))
-        (cons -1 -1)))))
+(defun mermaid--last-noblank-line-indentation ()
+  (save-excursion
+    (if (bobp)
+        0
+      (forward-line -1)
+      (while (and (not (bobp))
+                  (looking-at "[[:blank:]]*$"))
+        (forward-line -1))
+      (back-to-indentation)
+      (+ (current-indentation)
+         (if (looking-at mermaid-branch-starters-re)
+             mermaid-indentation-level
+           0)))))
 
 (defun mermaid--calculate-desired-indentation ()
   "Determine the indentation level that this line should have."
   (save-excursion
-    (end-of-line)
-    (let ((graph (mermaid--locate-declaration "^graph\\|sequenceDiagram\\|^gantt\\|^erDiagram"))
-          (subgraph (mermaid--locate-declaration "subgraph \\|loop \\|alt \\|opt"))
-          (both (mermaid--locate-declaration "^graph \\|^sequenceDiagram$\\|subgraph \\|loop \\|alt \\|opt\\|^gantt\\|^erDiagram"))
-          (else (mermaid--locate-declaration "else "))
-          (end (mermaid--locate-declaration "^ *end *$")))
-      (cond ((equal (car graph) 0) 0) ;; this is a graph declaration
-            ((equal (car end) 0) (cdr subgraph)) ;; this is "end", indent to nearest subgraph
-            ((equal (car subgraph) 0) (+ mermaid-indentation-level (cdr graph))) ;; this is a subgraph
-            ((equal (car else) 0) (cdr subgraph)) ;; this is "else:, indent to nearest alt
-            ;; everything else
-            ((< (car end) 0) (+ mermaid-indentation-level (cdr both))) ;; no end in sight
-            ((< (car both) (car end)) (+ mermaid-indentation-level (cdr both))) ;; (sub)graph declaration closer, +4
-            (t (cdr end)) ;; end declaration closer, same indent
-            ))))
+    (back-to-indentation)
+    (cond
+     ((looking-at mermaid-diagram-starters-re)
+      0)
+
+     ;; A "closer" indentation. We may want to indent it to the corresponding
+     ;; opener. But this would require to count openers over the buffer (e.g. to
+     ;; indent correctly case like `subgraph A\nsubgraph B\nend\nend'), so keep
+     ;; it simple for now — a user probably indented previous line to some value
+     ;; for a reason.
+     ((looking-at (regexp-opt '("end" "else") 'words))
+      (max
+       (- (mermaid--last-noblank-line-indentation) mermaid-indentation-level)
+       0))
+
+     ;; Otherwise assume the previous indentation is okay (whether indented by
+     ;; us or by a user) so indent to it.
+     (t (mermaid--last-noblank-line-indentation)))))
 
 (defun mermaid-indent-line ()
   "Indent the current line."
