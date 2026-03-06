@@ -104,7 +104,8 @@
   (regexp-opt mermaid-branch-starters 'words))
 
 (defconst mermaid-font-lock-keywords
-  `((,(regexp-opt (append mermaid-branch-starters '("end")) 'words) . font-lock-keyword-face)
+  `((":\\s-*\\(.+\\)" 1 font-lock-string-face append)
+    (,(regexp-opt (append mermaid-branch-starters '("end")) 'words) . font-lock-keyword-face)
     ("---\\|-?->*\\+?\\|==>\\|===" . font-lock-function-name-face)
     (,(regexp-opt '("TB" "TD" "BT" "LR" "RL" "DT" "BT" "class" "title" "section" "participant" "actor" "dataFormat" "Note") 'words) . font-lock-constant-face)))
 
