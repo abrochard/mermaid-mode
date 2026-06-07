@@ -191,14 +191,14 @@
 (defun mermaid-compile-buffer ()
   "Compile the current mermaid buffer using mmdc."
   (interactive)
-  (let* ((tmp-file-name (concat mermaid-tmp-dir "current-buffer.mmd")))
+  (let* ((tmp-file-name (expand-file-name "current-buffer.mmd" mermaid-tmp-dir)))
     (write-region (point-min) (point-max) tmp-file-name)
     (mermaid-compile-file tmp-file-name)))
 
 (defun mermaid-compile-region ()
   "Compile the current mermaid region using mmdc."
   (interactive)
-  (let* ((tmp-file-name (concat mermaid-tmp-dir "current-region.mmd")))
+  (let* ((tmp-file-name (expand-file-name "current-region.mmd" mermaid-tmp-dir)))
     (when (use-region-p)
       (write-region (region-beginning) (region-end) tmp-file-name)
       (mermaid-compile-file tmp-file-name))))
